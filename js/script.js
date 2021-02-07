@@ -19,6 +19,7 @@ jobRole.addEventListener('change',() =>{
     }
 })
 
+
 //gets the element needed to implement the color dropdown list and by default make the dropdown list disabled until design is selected
 const color = document.querySelector('#color');
 const colorChild = color.children;
@@ -49,3 +50,22 @@ design.addEventListener('change', () => {
         }
     }
 })
+
+
+//gets the fieldset element and the p element that displays the total cost
+const activities = document.querySelector('#activities');
+const costDisplay = document.querySelector('#activities-cost');
+let total = 0;
+//adds an event listener to the entire field set and only looks for changes in the checkboxes
+activities.addEventListener('change', (e) => {
+    // if the checkbox is checked the cost is added to the total if not then the cost is subtracted from the total
+    if (e.target.checked) {
+        total += parseInt(e.target.dataset.cost); 
+    } else {
+        total -= parseInt(e.target.dataset.cost);
+    }
+    costDisplay.textContent =  `Total: $${total}`;
+})
+
+
+//
