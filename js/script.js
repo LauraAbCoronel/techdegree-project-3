@@ -105,3 +105,10 @@ payment.addEventListener('change', () => {
             break;
     }
 })
+
+
+//validates form inputs
+const form = document.querySelector('form');
+form.addEventListener('submit', () => {
+    
+})
