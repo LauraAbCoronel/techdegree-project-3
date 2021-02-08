@@ -68,4 +68,40 @@ activities.addEventListener('change', (e) => {
 })
 
 
-//
+/*gets the elements needed to implement the payment type
+by default credit card is selected and paypay and bitcoin dev elements are hidden*/ 
+const payment = document.querySelector('#payment');
+const creditCard = document.querySelector('#credit-card');
+const paypal = document.querySelector('#paypal');
+const bitcoin = document.querySelector('#bitcoin');
+paypal.style.display = 'none';
+bitcoin.style.display = 'none';
+//by default credit card is selected for payment type
+payment.children[1].selected = true;
+//adds an event listener to the payment dropdown list and changes what is displayed depending on what is selected
+payment.addEventListener('change', () => {
+    switch (payment.value) {
+        case 'credit-card':
+            creditCard.style.display = '';
+            paypal.style.display = 'none';
+            bitcoin.style.display = 'none';
+            break;
+        case 'paypal':
+            creditCard.style.display = 'none';
+            paypal.style.display = '';
+            bitcoin.style.display = 'none';
+            break;
+        case 'bitcoin':
+            creditCard.style.display = 'none';
+            paypal.style.display = 'none';
+            bitcoin.style.display = '';
+            break;
+        // if for some reason there is an error credit card will be selected as default
+        default:
+            payment.children[1].selected = true;
+            creditCard.style.display = '';
+            paypal.style.display = 'none';
+            bitcoin.style.display = 'none';
+            break;
+    }
+})
