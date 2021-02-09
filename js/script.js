@@ -109,6 +109,37 @@ payment.addEventListener('change', () => {
 
 //validates form inputs
 const form = document.querySelector('form');
-form.addEventListener('submit', () => {
-    
+const emailInput = document.querySelector('#email');
+form.addEventListener('submit', (e) => {
+    if (!validateName(nameInput.value) ||
+        !validateEmail(emailInput.value) ||
+        !validateActivities(total) ||
+        !validateCreditCard()) {
+        e.preventDefault();
+        console.log('invalid email');
+    }
+
 })
+
+function validateName(name) {
+    return !/^\s*$/g.test(name);
+}
+function validateEmail(email) {
+    return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+}
+function validateActivities(total) {
+    return total>0;
+}
+function validateCreditCard() {
+    if (payment.value === 'credit-card') {
+        const creditCardNum = document.querySelector('#cc-num');
+        const zip = document.querySelector('#zip');
+        const cvv = document.querySelector('#cvv');
+        console.log(creditCardNum.value+', '+zip.value+', '+cvv.value)
+        return /^\d{13,16}$/gm.test(creditCardNum.value) &&
+               /^\d{5}$/gm.test(zip.value) &&
+               /^\d{3}$/gm.test(cvv.value);
+    } else {
+        return true
+    }
+}
