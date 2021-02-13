@@ -24,7 +24,7 @@ jobRole.addEventListener('change',() =>{
 const color = document.querySelector('#color');
 const colorChild = color.children;
 const design = document.querySelector('#design');
-color.disabled=true;
+color.disabled = true;
 //event listener will listen to any changes made in the design dropdown list
 design.addEventListener('change', () => {
     //enables the color dropdown list
@@ -53,16 +53,36 @@ design.addEventListener('change', () => {
 
 
 //gets the fieldset element and the p element that displays the total cost
-const activities = document.querySelector('#activities');
+const activitiesFieldset = document.querySelector('#activities');
 const costDisplay = document.querySelector('#activities-cost');
 let total = 0;
 //adds an event listener to the entire field set and only looks for changes in the checkboxes
-activities.addEventListener('change', (e) => {
+activitiesFieldset.addEventListener('change', (e) => {
+    const activities = document.querySelectorAll('[type = checkbox]');
     // if the checkbox is checked the cost is added to the total if not then the cost is subtracted from the total
     if (e.target.checked) {
-        total += parseInt(e.target.dataset.cost); 
+        total += parseInt(e.target.dataset.cost);
+        // loops activities variable and disables elements with the same dayAndTime
+        for (let i = 0; i < activities.length; i++) {
+            // if the activity in the array is the activity that triggered the event listener then continue to the next array element
+            if (activities[i].name === e.target.name) {
+                continue;
+            }
+            // if the activity matches the day an time of the activity with the checked box then disable the checkbox and add disabled class to the parent
+            if (activities[i].dataset.dayAndTime === e.target.dataset.dayAndTime) {
+                activities[i].disabled = true;
+                activities[i].parentElement.className = 'disabled';
+            }
+        }
     } else {
         total -= parseInt(e.target.dataset.cost);
+        //loops through activities varibale and enables the checkbox on all activites matching the dayAndTime and removes the class of the parent element
+        for (let i = 0; i < activities.length; i++) {
+            if (activities[i].dataset.dayAndTime === e.target.dataset.dayAndTime) {
+                activities[i].disabled = false;
+                activities[i].parentElement.className = '';
+            }
+        }
     }
     costDisplay.textContent =  `Total: $${total}`;
 })
@@ -229,11 +249,11 @@ function indicateValid(inputElement) {
 }
 
 //add focus class to the activities in focus
-activities.addEventListener("focusin", (e) => {
+activitiesFieldset.addEventListener("focusin", (e) => {
     e.target.parentElement.className = "focus";
 })
 //removes focus class to the activites out of focus
-activities.addEventListener('focusout', (e) => {
+activitiesFieldset.addEventListener('focusout', (e) => {
     e.target.parentElement.className = ' ';
 })
 
