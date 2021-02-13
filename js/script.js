@@ -110,36 +110,130 @@ payment.addEventListener('change', () => {
 //validates form inputs
 const form = document.querySelector('form');
 const emailInput = document.querySelector('#email');
+//adds an event listener to form element that listens for submit
 form.addEventListener('submit', (e) => {
-    if (!validateName(nameInput.value) ||
-        !validateEmail(emailInput.value) ||
-        !validateActivities(total) ||
+    //if any validation comes back false the form will not be submitted
+    if (!validateName(nameInput.value) |
+        !validateEmail(emailInput.value) |
+        !validateActivities(total) |
         !validateCreditCard()) {
         e.preventDefault();
-        console.log('invalid email');
     }
 
 })
-
+/*
+    validateds the name input
+    returns false if name is empty or just spaces and indicateError function is called passing in the name input element
+    returns else returns true and indicate Valid appears
+*/
 function validateName(name) {
-    return !/^\s*$/g.test(name);
+    if (/^\s*$/g.test(name)) {
+        indicateError(nameInput);
+        return false;
+    } else {
+        indicateValid(nameInput);
+        return true;
+    }
 }
+/*
+    validates email 
+    returns true if the email contains some letters followed by @ followed by more leters and a . and more letters
+    indicateValid function is called if true
+    indicateError function is called if false
+*/
 function validateEmail(email) {
-    return /^[^@]+@[^@.]+\.[a-z]+$/i.test(email);
+    if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(email)) {
+        indicateValid(emailInput);
+        return true;
+    } else {
+        indicateError(emailInput);
+        return false;
+    }
 }
+/*
+    validates if any activities were selected
+    returns true if the total cost of activites is greater than 0 and indicateValid function is called
+    if false indicateError function is called.
+*/
 function validateActivities(total) {
-    return total>0;
+    if (total>0) {
+        indicateValid(costDisplay);
+        return true;
+    } else {
+        indicateError(costDisplay);
+        return false;
+    }
 }
+/*
+first checks to see if payment type selected was credit card
+if not then funtion returns true
+if creditcard was selected then the function returns true if
+creditcard number is between 13-16 numbers and only numbers,
+zipcode has only 5 numbers and the cvv code is only 3 numbers
+*/
 function validateCreditCard() {
     if (payment.value === 'credit-card') {
+        // variable valid is to track if any of the che
+        let valid = true;
         const creditCardNum = document.querySelector('#cc-num');
         const zip = document.querySelector('#zip');
         const cvv = document.querySelector('#cvv');
-        console.log(creditCardNum.value+', '+zip.value+', '+cvv.value)
-        return /^\d{13,16}$/gm.test(creditCardNum.value) &&
-               /^\d{5}$/gm.test(zip.value) &&
-               /^\d{3}$/gm.test(cvv.value);
+        if (/^\d{13,16}$/gm.test(creditCardNum.value)) {
+            indicateValid(creditCardNum);
+        } else {
+            indicateError(creditCardNum);
+            valid = false;
+        }
+        if (/^\d{5}$/gm.test(zip.value)) {
+            indicateValid(zip);
+        } else {
+            indicateError(zip);
+            valid = false;
+        }
+        if (/^\d{3}$/gm.test(cvv.value)) {
+            indicateValid(cvv);
+        } else {
+            indicateError(cvv);
+            valid = false;
+        }
+        return valid;
     } else {
         return true
     }
 }
+
+
+/*
+    indicateError function takes in an element that has an invalid input
+    not-valid class gets added to the parent element and valid class gets removed from the parent element
+    the last child of the parent contains a hint for the users but the hint class in the last child has display = none
+    so the class hint is removed from the last child
+*/
+function indicateError(inputElement) {
+    const parent = inputElement.parentElement;
+    parent.classList.add('not-valid');
+    parent.classList.remove('valid');
+    parent.lastElementChild.classList.remove('hint');
+}
+
+/*
+    indicateValid function takes in an element that has a valid input
+    valid class gets added to the parent element and not-valid class gets removed from the parent element
+    the last child of the parent contains a hint for the users so the class hint is added to the last child to hide the hint
+*/
+function indicateValid(inputElement) {
+    const parent = inputElement.parentElement;
+    parent.classList.add('valid');
+    parent.classList.remove('not-valid');
+    parent.lastElementChild.classList.add('hint');
+}
+
+//add focus class to the activities in focus
+activities.addEventListener("focusin", (e) => {
+    e.target.parentElement.className = "focus";
+})
+//removes focus class to the activites out of focus
+activities.addEventListener('focusout', (e) => {
+    e.target.parentElement.className = ' ';
+})
+
