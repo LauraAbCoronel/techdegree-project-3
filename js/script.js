@@ -1,4 +1,4 @@
-// nameInput contains the input element for name
+//nameInput contains the input element for name
 const nameInput = document.querySelector('#name');
 // sets the name field to focus so when page loads name input is selected.
 nameInput.focus();
@@ -29,7 +29,8 @@ color.disabled = true;
 design.addEventListener('change', () => {
     //enables the color dropdown list
     color.disabled = false;
-    //makes the first hidden element selected when a change in the design dropdone list is made
+    //updates the dropdown box to ask the user to select a color and makes the first hidden element selected when a change in the design dropdone list is made
+    colorChild[0].textContent = 'Select a color'
     colorChild[0].selected = true;
     //only displays the appropriate color options dependent on the design selection and hides the other options
     if (design.value === 'js puns') {
@@ -133,14 +134,16 @@ const emailInput = document.querySelector('#email');
 //adds an event listener to form element that listens for submit
 form.addEventListener('submit', (e) => {
     //if any validation comes back false the form will not be submitted
-    if (!validateName(nameInput.value) |
-        !validateEmail(emailInput.value) |
-        !validateActivities(total) |
-        !validateCreditCard()) {
+    const nameOK = validateEmail(nameInput.value);
+    const emailOK = validateEmail(emailInput.value);
+    const activitiesOK = validateActivities(total);
+    const creditCardOK = validateCreditCard();
+    
+    if (!(nameOK && emailOK && activitiesOK && creditCardOK)) {
         e.preventDefault();
     }
 
-})
+});
 /*
     validateds the name input
     returns false if name is empty or just spaces and indicateError function is called passing in the name input element
@@ -165,8 +168,10 @@ function validateEmail(email) {
     if (/^[^@]+@[^@.]+\.[a-z]+$/i.test(email)) {
         indicateValid(emailInput);
         return true;
+    } else if (/^\s*$/g.test(email)) {
+        indicateError(emailInput,"Email field cannot be blank");
     } else {
-        indicateError(emailInput);
+        indicateError(emailInput,'Email address must be formatted correctly');
         return false;
     }
 }
@@ -229,11 +234,14 @@ function validateCreditCard() {
     the last child of the parent contains a hint for the users but the hint class in the last child has display = none
     so the class hint is removed from the last child
 */
-function indicateError(inputElement) {
+function indicateError(inputElement, errorMessage = 1) {
     const parent = inputElement.parentElement;
     parent.classList.add('not-valid');
     parent.classList.remove('valid');
     parent.lastElementChild.classList.remove('hint');
+    if (errorMessage !== 1) {
+        parent.lastElementChild.textContent = errorMessage;    
+    }
 }
 
 /*
@@ -257,3 +265,9 @@ activitiesFieldset.addEventListener('focusout', (e) => {
     e.target.parentElement.className = ' ';
 })
 
+
+/*
+    adds an event listener to emailInput that listens for keyup
+    when the event is triggered the email input is validated
+*/
+emailInput.addEventListener('keyup', () => {validateEmail(emailInput.value)})
