@@ -134,7 +134,7 @@ const emailInput = document.querySelector('#email');
 //adds an event listener to form element that listens for submit
 form.addEventListener('submit', (e) => {
     //if any validation comes back false the form will not be submitted
-    const nameOK = validateEmail(nameInput.value);
+    const nameOK = validateName(nameInput.value);
     const emailOK = validateEmail(emailInput.value);
     const activitiesOK = validateActivities(total);
     const creditCardOK = validateCreditCard();
